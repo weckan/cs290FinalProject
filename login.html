@@ -8,26 +8,27 @@
 </header>
 <body>
     <div id="login">
-        <form class="pure-form pure-form-aligned pure-form-stacked">
+        <!form class="pure-form pure-form-aligned pure-form-stacked">
             <fieldset>
             <label>Username<input type='text' id='loginUsername'></label>
             <label>Password<input type='password' id='loginPass'></label>
-            <input type='submit' value='Login'
-                onClick="loginSubmit()">
+            <input type='submit' value='Login' onClick="return loginSubmit();">
             </fieldset>
-        </form>
+        <!/form>
     </div>
     <br>
+    <div id="LoginAjaxDump"><br></div>
     <br>
-    <br>
+    <div id="UsernameAjaxDump"><br></div>
     <br>
     <div id="register">
-       <form class="pure-form pure-form-aligned">
+       <!form class="pure-form pure-form-aligned">
          <label for="testUsername">Username<input type='text' id='testUsername' required></label>
          <label for="testPass">Password<input type='password' id='testPass' required></label>
          <label for="fName">First Name<input type='text' id='fName' ></label>
          <label for="lName">Last Name<input type='text' id='lName'></label>
         <select id='state'>
+            <option value=""></option>
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -84,10 +85,9 @@
          <label for="email">Email<input type='text' id='email'></label>
          <label for="phone">Phone<input type='text' id='phone'></label>
         <input type='submit' value='Create Account!'
-            onClick="checkUsername(document.getElementById('testUsername').value)">
-        </form>
+            onClick="checkUsername()">
+        <!/form>
     </div>
-    <div id="AjaxDump"><br></div>
 
 </body>
 </html>

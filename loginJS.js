@@ -1,16 +1,38 @@
 
 function checkUsernameAjaxResponse(testResult) {
     // testResult is supplied data from AJAX
-    var ajaxResults = document.getElementById('AjaxDump');
+    var ajaxResults = document.getElementById('UsernameAjaxDump');
     if(testResult == 1) {
-        console.log("<p> USERNAME AVAILABLE </p>");
-        ajaxResults.innerHTML = "Available"
+        //console.log("<p> USERNAME AVAILABLE </p>");
+        //ajaxResults.innerHTML = "Available"
+        //
+        //navigate to landing page
+        //window.location.href = "http://web.engr.oregonstate.edu/~weckwera/290/wk10/landing.html";
+        window.location.assign("http://web.engr.oregonstate.edu/~weckwera/290/wk10/landing.html");
+        return false;
     }
     else {
         console.log("ALREADY TAKEN");
         ajaxResults.innerHTML = "Taken"
     }
 }   
+
+function loginResults(response) {
+    // response is supplied data from AJAX
+    var ajaxResults = document.getElementById('LoginAjaxDump');
+    if(response == 1) {
+        //console.log("<p> USERNAME AVAILABLE </p>");
+        //ajaxResults.innerHTML = "Available"
+        //
+        //navigate to landing page
+        //window.location.href = "http://web.engr.oregonstate.edu/~weckwera/290/wk10/landing.html";
+        window.location.assign("http://web.engr.oregonstate.edu/~weckwera/290/wk10/landing.html");
+    }
+    else {
+        console.log("ALREADY TAKEN");
+        ajaxResults.innerHTML = "Login credentials invalid"
+    }
+}
 
 
 //AJAX for username check
@@ -34,20 +56,18 @@ function checkUsername() {
             checkUsernameAjaxResponse(response);
         }
     }
-    var username = "testUsername=" + document.getElementById('testUsername').value;
-    var password = "testPass=" + document.getElementById('testPass').value;
+    var username = "username=" + document.getElementById('testUsername').value;
+    var password = "password=" + document.getElementById('testPass').value;
     var county = "county=" + document.getElementById('county').value;
     var state = "state=" + document.getElementById('state').value;
     var fName = "fName=" + document.getElementById('fName').value;
     var lName = "lName=" + document.getElementById('lName').value;
     var email = "email=" + document.getElementById('email').value;
     var phone = "phone=" + (document.getElementById('phone').value).replace(/[^0-9.]/g, "");
-    //phone = phone.replace(/[^0-9.]/g, "");    
-    //phone = phone.value.replace(/\D[^\.]/g, "");    
+    var test = "test=true";
 
-    //var args = "?" + username + "&" + password + "&" + county + "&" + state 
     var args = username + "&" + password + "&" + county + "&" + state 
-            + "&" + fName + "&" + lName + "&" + email + "&" + phone;
+            + "&" + fName + "&" + lName + "&" + email + "&" + phone + "&" + test;
     
     req.open('POST', url);
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -67,16 +87,18 @@ function loginSubmit() {
             console.log(this.status); //tell me that you're doing something
             console.log(this.responseText);//check out server response
             
-            var response = JSON.parse(this.responseText);
+            //var response = JSON.parse(this.responseText);
+            var response = (this.responseText);
             
             //call function with results
-            loginResponse(response);
+            loginResults(response);
         }
     }
-    var username = "username=" + document.getElementById('username').value;
+    var username = "username=" + document.getElementById('loginUsername').value;
     var password = "password=" + document.getElementById('loginPass').value;
+    var login = "login=true";
 
-    var args = "?" + username + "&" + password;
+    var args = username + "&" + password + "&" + login;
 
     req.open('POST', url);
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");

@@ -8,26 +8,21 @@
 
 </header>
  <body>
-  <form action='lab.php' method='post'>
    <input type="button" value="Logout" name="logout" onclick="logoutUser()"/>
-  </form>
   <br>
-  <form action='main.php' method='post'>
-  <input type="submit" value="Delete All Movies" name="delete_all_movies"/>
-  </form>
+   <input type="button" value="All Sites" name="logout" onclick="getAllSites()"/>
   <br>
+   <input type="button" value="New Site" name="logout" onclick="showSiteForm()"/>
   <br>
   <table>
-  <thead>
-  <tr>
-  <td>Name</td>
-  <td>Category</td>
-  <td>Length</td>
-  <td>Rented?</td>
-  <td>Rent/Return</td>
-  <td>Delete Movie</td>
-  </tr>
-  </thead>
-  <tbody>
+   <thead>
+   <tr>
+    <td>Site Name</td>
+    <td>County</td>
+    <td>State</td>
+    <td>Species Present</td>
+   </tr>
+   </thead>
+  <tbody id="allSites">
  </body>
 </html>

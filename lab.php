@@ -6,7 +6,7 @@ ini_set('session.save_path', '/nfs/stak/students/w/weckwera');
 session_start();
 
 //if session 'user' is not set, invalid navigation to page
-if (session_name() == NULL && !(isset($_POST['test']) ||
+if ($_SESSION['userID'] == NULL && !(isset($_POST['test']) ||
     isset($_GET['test']) || isset($_GET['login']) ||
     isset($_POST['login']))) {
     logoutUser();

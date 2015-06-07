@@ -8,7 +8,8 @@ function checkUsernameAjaxResponse(testResult) {
         //
         //navigate to landing page
         //window.location.href = "http://web.engr.oregonstate.edu/~weckwera/290/wk10/landing.html";
-        window.location.assign("http://web.engr.oregonstate.edu/~weckwera/290/wk10/landing.html");
+        window.location.assign(
+                "http://web.engr.oregonstate.edu/~weckwera/290/wk10/main2.php");
         return false;
     }
     else {
@@ -26,7 +27,8 @@ function loginResults(response) {
         //
         //navigate to landing page
         //window.location.href = "http://web.engr.oregonstate.edu/~weckwera/290/wk10/landing.html";
-        window.location.assign("http://web.engr.oregonstate.edu/~weckwera/290/wk10/landing.html");
+        window.location.assign(
+                "http://web.engr.oregonstate.edu/~weckwera/290/wk10/main2.php");
     }
     else {
         console.log("ALREADY TAKEN");

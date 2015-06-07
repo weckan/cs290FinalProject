@@ -6,7 +6,7 @@ ini_set('session.save_path', '/nfs/stak/students/w/weckwera');
 session_start();
 
 //if session 'user' is not set, invalid navigation to page
-if ($_SESSION['userID'] == NULL && !(isset($_POST['test']) ||
+if (!(isset($_SESSION['userID'])) && !(isset($_POST['test']) ||
     isset($_GET['test']) || isset($_GET['login']) ||
     isset($_POST['login']))) {
     logoutUser();
@@ -45,12 +45,6 @@ if (isset($_POST['test'])) {
         addUser($_POST);
         loginUser($_POST);
         if(loginUser($_POST) == 1) {
-            //echo "Login Successful!";
-            //echo "Session id = " . session_id();
-            //$filePath = explode('/',$_SERVER['PHP_SELF'], -1);
-            //$filePath = implode('/', $filePath);
-            //$redirect = "http://" . $_SERVER['HTTP_HOST'] . $filePath;
-            //header("Location: {$redirect}/landing.html", true);
             echo 1;
         }
         else {
@@ -66,12 +60,7 @@ if (isset($_GET['test'])) {
         addUser($_GET);
         loginUser($_GET);
         if(loginUser($_GET) == 1) {
-            //echo "Login Successful!";
-            //echo "Session id = " . session_id();
-            //$filePath = explode('/',$_SERVER['PHP_SELF'], -1);
-            //$filePath = implode('/', $filePath);
-            //$redirect = "http://" . $_SERVER['HTTP_HOST'] . $filePath;
-            //header("Location: {$redirect}/landing.html", true);
+		echo 1;
         }
         else {
             //echo "Login Failed!";
@@ -80,6 +69,16 @@ if (isset($_GET['test'])) {
     } else {
         echo 0;
     }
+}
+
+//conditional cue for function to return all active non-private sites
+if (isset($_GET['allSites']) || isset($_POST['allSites'])) {
+     getAllSites();
+}
+
+//conditional cue for function to get sites matching user
+if (isset($_GET['mySites']) || isset($_POST['mySites'])) {
+     getMySites();
 }
 
 // if login is posted to server, verify correct entry and login
@@ -109,7 +108,6 @@ if (isset($_GET['login'])) {
     }
 }
 
-//var_dump($_SESSION);
 
 function logoutUser () {
     $_SESSION = array();
@@ -264,4 +262,69 @@ function addUser ($array) {
         echo "Statment not closed.";
     }
 }
+
+function getAllSites() {
+    global $mysqli;
+
+    $result = $mysqli->query("SELECT sites.id, sites.name, sites.county,
+        sites.state, species.commonName FROM sites INNER JOIN site_species ON
+        sites.id = site_species.siteID INNER JOIN species ON
+        site_species.speciesID = species.id WHERE sites.private=0 ORDER
+        BY sites.id");
+
+    $allRows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    //$allRows = mysqli_fetch_all($result, MYSQLI_NUM);
+
+    //return array to ajax call
+    echo json_encode($allRows);
+}
+
+function getMySites() {
+    global $mysqli;
+
+    $userID = $mysqli->real_escape_string($_SESSION['userID']);
+
+    //text for prepared query
+    $query = "SELECT sites.id, sites.name, sites.county,
+        sites.state, species.commonName, sites.notes, sites.lastEdited
+        FROM sites INNER JOIN site_species ON
+        sites.id = site_species.siteID INNER JOIN species ON
+        site_species.speciesID = species.id INNER JOIN user_sites ON
+        sites.id = user_sites.siteID WHERE sites.private=0 AND
+        user_sites.userID = ? ORDER BY sites.id";
+
+    //prepared statement details
+    /*prepare statement stage 1*/
+    if (!($stmt = $mysqli->prepare($query))) {
+       echo ":FAILED INSERT USER PREPARE";
+        echo $mysqli->error;
+    }
+    /*prepared statement bind/execute*/
+    if (!($stmt->bind_param('i', $userID))) {
+        echo "Binding parameters failed";
+    }
+    if (!($result = $stmt->execute())) {
+        echo "Execute failed insert user";
+        echo $stmt->error;
+    }
+
+    // code section taken from user "Chris" at stack overflow:
+    // http://stackoverflow.com/questions/994041/how-can-i-put-the-results-of-a-mysqli-prepared-statement-into-an-associative-arr
+    $meta = $stmt->result_metadata();
+    while ($field = $meta->fetch_field()) {
+            $params[] = &$row[$field->name];
+    }
+
+    call_user_func_array(array($stmt, 'bind_result'), $params);
+    while ($stmt->fetch()) {
+            foreach($row as $key => $val) {
+                        $c[$key] = $val;
+                            }
+                $hits[] = $c;
+    }
+    echo json_encode($hits);
+    $stmt->close();
+    //end SO code
+}
+
 ?>

@@ -7,14 +7,26 @@
     <script src="loginJS.js"></script>
 </header>
 <body>
+    <div class="content">
+        <p>
+        This site is intended to be an information hub for small-scale
+        community volunteer groups. Natural areas are frequently the first and
+        hardest hit by invasive species, and it is helpful to know what species
+        of concern are present in a given spot, and what steps are necessary at
+        a given time. For example, some plants must be pulled before seed pods
+        are present, while others may have a specific technique necessary for
+        reliable eradication. This site allows viewing of information on local
+        sites and species, and provides a foundation for users to follow specific sites,
+        add new information, and post content for other volunteers. Not present
+        yet is message board or directory functionality, but these would be the
+        next logical steps.
+        </p>
     <div id="login">
-        <!form class="pure-form pure-form-aligned pure-form-stacked">
-            <fieldset>
+            <fieldset class="pure-form pure-form-aligned pure-form-stacked">
             <label>Username<input type='text' id='loginUsername'></label>
             <label>Password<input type='password' id='loginPass'></label>
             <input type='submit' value='Login' onClick="return loginSubmit();">
             </fieldset>
-        <!/form>
     </div>
     <br>
     <div id="LoginAjaxDump"><br></div>
@@ -22,12 +34,13 @@
     <div id="UsernameAjaxDump"><br></div>
     <br>
     <div id="register">
-       <!form class="pure-form pure-form-aligned">
+       <fieldset class="pure-form pure-form-stacked">
          <label for="testUsername">Username<input type='text' id='testUsername' required></label>
          <label for="testPass">Password<input type='password' id='testPass' required></label>
          <label for="fName">First Name<input type='text' id='fName' ></label>
          <label for="lName">Last Name<input type='text' id='lName'></label>
-        <select id='state'>
+         <label for='state'>State
+        <select id='state' >
             <option value=""></option>
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
@@ -86,7 +99,7 @@
          <label for="phone">Phone<input type='text' id='phone'></label>
         <input type='submit' value='Create Account!'
             onClick="checkUsername()">
-        <!/form>
+        </fieldset>
     </div>
 
 </body>

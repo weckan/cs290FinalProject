@@ -5,14 +5,90 @@ window.onload = function() {
     getAllSites();
 }
 
+function drawInvInfo(data) {
+    clearMainTable();
+    var thead = document.getElementById('dataHeader');
+
+    var title = document.createElement("tr");
+    var titleTextFill = document.createTextNode("Invasives Info");
+    title.appendChild(titleTextFill);
+    
+    var labels = document.createElement("tr");
+    
+    var commonName = document.createElement("td");
+    var commonNameText = document.createTextNode("Common Name");
+    commonName.appendChild(commonNameText);
+    var genus = document.createElement("td");
+    var genusText = document.createTextNode("Genus");
+    genus.appendChild(genusText);
+    var species = document.createElement("td");
+    var speciesText = document.createTextNode("Species");
+    species.appendChild(speciesText);
+    var notes= document.createElement("td");
+    var notesText= document.createTextNode("Notes");
+    notes.appendChild(notesText);
+    var link= document.createElement("td");
+    var linkText= document.createTextNode("More Info");
+    link.appendChild(linkText);
+
+    labels.appendChild(commonName);
+    labels.appendChild(genus);
+    labels.appendChild(species);
+    labels.appendChild(notes);
+    labels.appendChild(link);
+
+    thead.appendChild(title);
+    thead.appendChild(labels);
+
+    var tbody = document.getElementById('allSites');
+    var siteData = JSON.parse(data);
+    for (var i = 0; i < siteData.length; i++) {
+        //create row
+        var tr = document.createElement("tr");
+        //hold site ID
+        var siteID = siteData[i].id;
+
+        //create cells for each field, append each
+        var commonName = document.createElement("td");
+        var commonNameText = document.createTextNode(siteData[i].commonName);
+        commonName.appendChild(commonNameText);
+        
+        var genus = document.createElement("td");
+        var genusText = document.createTextNode(siteData[i].genus);
+        genus.appendChild(genusText);
+       
+        var species = document.createElement("td");
+        var speciesText = document.createTextNode(siteData[i].species);
+        species.appendChild(speciesText);
+       
+        var notes= document.createElement("td");
+        var notesText= document.createTextNode(siteData[i].notes);
+        notes.appendChild(notesText);
+       
+        var link= document.createElement("td");
+        var linkText= document.createElement('a');
+        var linkDisplay = document.createTextNode(siteData[i].link);
+        linkText.appendChild(linkDisplay);
+        linkText.href= (siteData[i].link);
+        link.appendChild(linkText);
+
+        tr.appendChild(commonName);
+        tr.appendChild(genus);
+        tr.appendChild(species);
+        tr.appendChild(notes);
+        tr.appendChild(link);
+
+    tbody.appendChild(tr);
+    }
+}
+
 function drawMySites(data) {
     clearMainTable();
     var thead = document.getElementById('dataHeader');
 
     var title = document.createElement("tr");
-    var titleText = document.createElement("td");
     var titleTextFill = document.createTextNode("My Sites");
-    titleText.appendChild(titleTextFill);
+    title.appendChild(titleTextFill);
     
     var labels = document.createElement("tr");
     
@@ -126,6 +202,7 @@ function drawAllSites(data) {
         var titleText = document.createElement("td");
         var titleTextFill = document.createTextNode("All Cleanup Sites");
         titleText.appendChild(titleTextFill);
+        title.appendChild(titleText);
         
         var labels = document.createElement("tr");
         
@@ -144,12 +221,16 @@ function drawAllSites(data) {
         var species = document.createElement("td");
         var speciesText = document.createTextNode("Species Present");
         species.appendChild(speciesText);
+        var addSite= document.createElement("td");
+        var addSiteText= document.createTextNode("Volunteer at Site");
+        addSite.appendChild(addSiteText);
 
         labels.appendChild(siteID);
         labels.appendChild(siteName);
         labels.appendChild(county);
         labels.appendChild(state);
         labels.appendChild(species);
+        labels.appendChild(addSite);
 
         thead.appendChild(title);
         thead.appendChild(labels);
@@ -163,9 +244,9 @@ function drawAllSites(data) {
         var siteID = siteData[i].id;
 
         //create cells for each field, append each
-        var id = document.createElement("td");
-        var idText = document.createTextNode(siteData[i].id);
-        id.appendChild(idText);
+        var siteid = document.createElement("td");
+        var siteidText = document.createTextNode(siteData[i].id);
+        siteid.appendChild(siteidText);
 
         var name = document.createElement("td");
         var nameText = document.createTextNode(siteData[i].name);
@@ -198,12 +279,27 @@ function drawAllSites(data) {
         }
         var comNameText = document.createTextNode(comNameList);
         comName.appendChild(comNameText);
+        
+        var mySite = document.createElement("td");
+        var mySiteButton= document.createElement('input');
+        mySiteButton.id = siteidText.nodeValue;
+        mySiteButton.type = 'button';
+        mySiteButton.value = 'Adopt Site';
+        mySiteButton.onclick = function() {
+            adoptSite(this.id);
+            this.disabled = true;
+            this.value = "Thanks!";
+        }
+        mySite.appendChild(mySiteButton);
 
-        tr.appendChild(id);
+        state.appendChild(stateText);
+
+        tr.appendChild(siteid);
         tr.appendChild(name);
         tr.appendChild(county);
         tr.appendChild(state);
         tr.appendChild(comName);
+        tr.appendChild(mySite);
         
         //
 
@@ -222,6 +318,34 @@ function clearMainTable() {
     }
 }
 
+//AJAX for invasive information 
+function getInvInfo() {
+    //create new request
+    var req = new XMLHttpRequest();
+    if (!req) {
+        throw "Unable to create HttpRequest.";
+    }
+    //url should be appropriate php reference
+    var url = 'http://web.engr.oregonstate.edu/~weckwera/290/wk10/lab.php';
+    req.onload = function () {
+        if (this.readyState === 4) {
+            console.log(this.status); //tell me that you're doing something
+            console.log(this.responseText);//check out server response
+            
+            //var response = JSON.parse(this.responseText);
+            var response = (this.responseText);
+            
+            //call function with results
+            drawInvInfo(response);
+        }
+    }
+
+    var args = "getInvInfo=true";
+    
+    req.open('POST', url);
+    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    req.send(args);
+}
 //AJAX call to get list of user sites, encoded as an associative array
 function getMySites() {
     //create new request
@@ -350,4 +474,14 @@ function checkUsername() {
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     req.send(args);
 }
+
+function adoptSite(siteID) {
+    var req = new XMLHttpRequest();
+    var url = 'http://web.engr.oregonstate.edu/~weckwera/290/wk10/lab.php';
+    var args = "siteID=" + siteID + "&adoptSite=true";
+    req.open('POST', url);
+    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    req.send(args);
+}
+
 

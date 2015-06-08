@@ -14,7 +14,7 @@ function checkUsernameAjaxResponse(testResult) {
     }
     else {
         console.log("ALREADY TAKEN");
-        ajaxResults.innerHTML = "Taken"
+        ajaxResults.innerHTML = "THAT USERNAME IS TAKEN"
     }
 }   
 
@@ -32,7 +32,7 @@ function loginResults(response) {
     }
     else {
         console.log("ALREADY TAKEN");
-        ajaxResults.innerHTML = "Login credentials invalid"
+        ajaxResults.innerHTML = "LOGIN CREDENTIALS INVALID"
     }
 }
 
